@@ -78,7 +78,8 @@ resource "azurerm_container_group" "this" {
         }
       }
       dynamic "volume" {
-        for_each = container.value.volumes
+        #for_each = container.value.volumes
+        for_each = container.value.volumes != null ? [container.value.volumes] : []
         content {
           mount_path = volume.value.mount_path
           name       = volume.key
