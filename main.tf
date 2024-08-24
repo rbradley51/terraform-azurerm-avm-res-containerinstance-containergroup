@@ -79,10 +79,10 @@ resource "azurerm_container_group" "this" {
       }
       dynamic "volume" {
         #for_each = container.value.volumes
-        for_each = container.value.volumes #!= null ? [container.value.volumes] : []
+        for_each = container.value.volumes != null ? container.value.volumes : {}
         content {
-          mount_path = try(volume.value.mount_path, null)
-          name       = try(volume.key, null)
+          mount_path = volume.value.mount_path
+          name       = volume.key
           empty_dir  = try(volume.value.empty_dir, false)
           read_only  = try(volume.value.read_only, false)
           # secret               = try(var.container_volume_secrets[container.key].volume[volume.key], null)
