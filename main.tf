@@ -81,8 +81,8 @@ resource "azurerm_container_group" "this" {
         for_each = container.value.volumes
         #for_each = container.value.volumes != null ? [container.value.volumes] : []
         content {
-          mount_path = volume.value.mount_path
-          name       = volume.key
+          mount_path = try(volume.value.mount_path, null)
+          name       = try(volume.key, null)
           empty_dir  = try(volume.value.empty_dir, false)
           read_only  = try(volume.value.read_only, false)
           # secret               = try(var.container_volume_secrets[container.key].volume[volume.key], null)
@@ -94,9 +94,9 @@ resource "azurerm_container_group" "this" {
           dynamic "git_repo" {
             for_each = volume.value.git_repo != null ? [volume.value.git_repo] : []
             content {
-              url       = git_repo.value.url
-              directory = git_repo.value.directory
-              revision  = git_repo.value.revision
+              url       = try(git_repo.value.url, null)
+              directory = try(git_repo.value.directory, null)
+              revision  = try(git_repo.value.revision, null)
             }
           }
         }
